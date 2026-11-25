@@ -1,0 +1,16 @@
+<div class="receipt-upload" data-receipt-upload>
+  <div class="upload-content">
+    <span class="upload-icon" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m-4 4 4-4 4 4M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/></svg>
+    </span>
+    <div class="upload-copy">
+      <strong data-upload-name aria-live="polite">{% if widget.is_initial %}Receipt attached{% else %}Upload a receipt{% endif %}</strong>
+      <span>PDF, JPG, PNG or WebP · Up to 5 MB</span>
+    </div>
+    <span class="upload-browse" aria-hidden="true">Browse files</span>
+  </div>
+  <input type="{{ widget.type }}" name="{{ widget.name }}"{% include 'django/forms/widgets/attrs.html' %}>
+  {% if widget.is_initial and not widget.required %}
+    <label class="upload-clear" for="{{ widget.checkbox_id }}"><input type="checkbox" name="{{ widget.checkbox_name }}" id="{{ widget.checkbox_id }}"{% if widget.attrs.disabled %} disabled{% endif %}> Remove existing receipt</label>
+  {% endif %}
+</div>

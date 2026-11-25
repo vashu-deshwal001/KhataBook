@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block title %}Sign in · Khata Book{% endblock %}
+{% block content %}
+<div class="login-layout"><section class="login-intro"><a class="brand" href="/">ख &nbsp; KhataBook</a><div class="eyebrow">LESS PAPERWORK. MORE PEACE OF MIND.</div><h1>Your shop.<br>Your customers.<br>Every rupee, clear.</h1><p>A simple, shared view of purchases, payments and balances. Keep your relationships personal and your accounts organised.</p><div class="login-seal">₹ <span>A little clarity goes a long way.</span></div></section>
+<section class="login-form"><div class="eyebrow">WELCOME BACK</div><h2>Sign in to your khata</h2><p class="muted">Use the account provided by your shopkeeper.</p><form method="post">{% csrf_token %}{{ form.as_p }}{% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}<button class="button full" type="submit">Sign in</button></form><p class="small muted">Need an account or a password reset? Contact your shopkeeper.</p></section></div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}Record a transaction · Khata Book{% endblock %}
+{% block content %}
+<div class="page-heading transaction-heading">
+  <div><div class="eyebrow">YOUR DAILY KHATA</div><h1>Record a transaction</h1><p class="muted">Add a purchase or payment to your customer’s account.</p></div>
+  <a class="button secondary" href="{% url 'ledger' %}">View ledger</a>
+</div>
+<div class="transaction-layout">
+  <section class="panel transaction-panel">
+    <div class="panel-heading"><div><h2>Transaction details</h2><p class="muted">A few details, and your khata is up to date.</p></div><span class="badge">New entry</span></div>
+    <form method="post" enctype="multipart/form-data" id="transaction-form">
+      {% csrf_token %}{{ form.non_field_errors }}
+      <div class="transaction-fields">
+      {% for field in form %}
+        {% if field.is_hidden %}{{ field }}{{ field.errors }}{% else %}
+        <div class="form-field {% if field.name == 'customer' or field.name == 'notes' or field.name == 'receipt' %}field-wide{% endif %}">
+          <label for="{{ field.id_for_label }}">{% if field.name == 'kind' %}Transaction type{% else %}{{ field.label }}{% endif %}{% if not field.field.required %}<span class="optional-label">Optional</span>{% endif %}</label>
+          {{ field }}
+          {% if field.help_text %}<div class="helptext">{{ field.help_text }}</div>{% endif %}{{ field.errors }}
+        </div>
+        {% endif %}
+      {% endfor %}
+      </div>
+      <div class="transaction-footer"><span class="muted">Review the details before saving.</span><div class="actions"><a class="button secondary" href="{% url 'ledger' %}">Cancel</a><button class="button" type="submit">Save transaction</button></div></div>
+    </form>
+  </section>
+  <aside class="transaction-aside" aria-label="Transaction summary">
+    <section class="balance-preview">
+      <div class="preview-heading"><span>ACCOUNT PREVIEW</span><span class="preview-symbol" aria-hidden="true">₹</span></div>
+      <h2 id="preview-name">Select a customer</h2><p id="preview-code">Their balance will appear here.</p>
+      <div class="preview-current"><span>Current balance owed</span><strong id="preview-current">—</strong></div>
+      <div class="preview-change"><span id="preview-type">Transaction amount</span><strong id="preview-change">—</strong></div>
+      <div class="preview-total" aria-live="polite" aria-atomic="true"><span>Balance after this entry</span><strong id="preview-total">—</strong><small id="preview-status">Choose a customer and enter an amount.</small></div>
+      <p class="preview-note">Preview only. Your balance updates when you save.</p>
+      <noscript><p>Enable JavaScript to preview balances. You can still save your transaction.</p></noscript>
+    </section>
+    <section class="panel transaction-guide"><h2>Which entry should I use?</h2><div><span class="guide-sign" aria-hidden="true">+</span><p><strong>Credit purchase</strong><small>Adds to the amount your customer owes.</small></p></div><div><span class="guide-sign" aria-hidden="true">−</span><p><strong>Payment received</strong><small>Reduces the amount your customer owes.</small></p></div><p class="opening-hint">Starting an existing khata? Use an opening balance for the first entry.</p></section>
+    {% if not customer_balances %}<div class="tip"><strong>No active customers yet.</strong><br><a href="{% url 'customer_create' %}">Add a customer</a> to record your first transaction.</div>{% endif %}
+  </aside>
+</div>
+{{ customer_balances|json_script:'customer-balances' }}
+<script src="{% static 'upload.js' %}" defer></script>
+<script src="{% static 'transaction.js' %}" defer></script>
+{% endblock %}

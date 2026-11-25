@@ -1,0 +1,15 @@
+.venv/
+.vendor/
+__pycache__/
+*.py[cod]
+db.sqlite3
+media/
+staticfiles/
+.env
+.secret-key
+*.log
+*.sqlite3-journal
+*.sqlite3-wal
+*.sqlite3-shm
+.env.*
+!.env.example

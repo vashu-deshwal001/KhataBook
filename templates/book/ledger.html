@@ -1,0 +1,3 @@
+{% extends 'base.html' %}{% load khata %}
+{% block content %}<div class="page-heading"><div><div class="eyebrow">EVERY ENTRY, IN ONE PLACE</div><h1>Ledger & reports</h1><p class="muted">Search, filter and export your shop’s transactions.</p></div><div class="actions"><a class="button secondary" href="{% url 'export_ledger' %}?{% querystring %}">Export CSV</a><a class="button" href="{% url 'entry_create' %}">+ Record transaction</a></div></div>
+{% include 'book/filters.html' %}<div class="report-summary"><strong>{{ page_obj.paginator.count }} entries</strong><span>Net balance change in selected records: <strong>₹{{ net_change|floatformat:2 }}</strong></span></div>{% include 'book/entries.html' %}{% include 'book/pagination.html' %}{% endblock %}

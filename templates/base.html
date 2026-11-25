@@ -1,0 +1,26 @@
+{% load static %}
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#651b24"><title>{% block title %}Khata Book{% endblock %}</title><link rel="stylesheet" href="{% static 'book.css' %}?v=red-3"></head>
+<body>
+{% if user.is_authenticated %}
+<aside class="sidebar">
+  <a class="brand" href="{% url 'dashboard' %}"><span class="brand-icon">ख</span> Khata<span class="brand-light">Book</span></a>
+  <div class="shop-label">YOUR EVERYDAY ACCOUNT BOOK</div>
+  <nav aria-label="Main navigation">
+    <a class="{% if request.path == '/' %}selected{% endif %}" href="{% url 'dashboard' %}"><span>▦</span> {% if user.is_shopkeeper %}Overview{% else %}My khata{% endif %}</a>
+    {% if user.is_shopkeeper %}<a class="{% if '/customers/' in request.path %}selected{% endif %}" href="{% url 'customers' %}"><span>◎</span> Customers</a><a class="{% if '/ledger/' in request.path %}selected{% endif %}" href="{% url 'ledger' %}"><span>≡</span> Ledger & reports</a>{% endif %}
+    <a class="{% if '/products/' in request.path %}selected{% endif %}" href="{% url 'products' %}"><span>◇</span> Product catalogue</a>
+    <a href="{% url 'password_change' %}"><span>⚙</span> Change password</a>
+    {% if user.is_superuser %}<a href="{% url 'admin:index' %}"><span>⊞</span> Django admin</a>{% endif %}
+  </nav>
+  <div class="sidebar-bottom"><div class="avatar">{{ user.username|first|upper }}</div><div><strong>{{ user.get_full_name|default:user.username }}</strong><small>{% if user.is_shopkeeper %}Shopkeeper{% else %}Customer account{% endif %}</small></div><form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="logout" title="Sign out" aria-label="Sign out">⏻</button></form></div>
+</aside>
+{% endif %}
+<main class="{% if user.is_authenticated %}main{% else %}guest{% endif %}">
+{% if user.is_authenticated %}<header class="topbar"><span>Simple accounts. Stronger relationships.</span><span>{% now 'D, d M Y' %}</span></header>{% endif %}
+<div class="content">
+{% if messages %}<div aria-live="polite">{% for message in messages %}<div class="notice {{ message.tags }}">{{ message }}</div>{% endfor %}</div>{% endif %}
+{% block content %}{% endblock %}
+</div>
+</main>
+</body></html>
